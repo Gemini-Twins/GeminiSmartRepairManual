@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Repair Manual & Software Guide</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-purple: #c084fc;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: #334155;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: var(--accent);
+            margin: 0 0 5px 0;
+            font-size: 24px;
+        }
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin: 0;
+        }
+        .search-box {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-main);
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .search-box:focus {
+            border-color: var(--accent);
+        }
+        /* Filter Category Buttons */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+        }
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--accent);
+            color: #0f172a;
+            font-weight: bold;
+            border-color: var(--accent);
+        }
+        .manual-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent);
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .badge.software {
+            background: rgba(192, 132, 252, 0.15);
+            color: var(--accent-purple);
+        }
+        .manual-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+        }
+        .tools-needed {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .step-item input[type="checkbox"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-green);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .step-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .step-item.completed .step-text {
+            text-decoration: line-through;
+            color: var(--text-sub);
+        }
+        /* Pricing Calculator Box */
+        .calc-box {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px dashed var(--border);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .calc-box label { color: var(--text-sub); display: block; margin-bottom: 4px; }
+        .calc-input {
+            width: 80px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .profit-display {
+            font-weight: bold;
+            color: var(--accent-green);
+            float: right;
+            font-size: 14px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .youtube-btn {
+            flex: 1;
+            background: rgba(255, 0, 0, 0.15);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h2>Smart Repair Manual</h2>
+            <p class="subtitle">Hardware & Software Pro Diagnostics Guide</p>
+        </header>
+
+        <input type="text" id="searchInput" class="search-box" placeholder="Search issue (e.g., screen, frp, bootloop, charging)..." onkeyup="filterManuals()">
+
+        <!-- Category Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="tab-btn active" onclick="filterCategory('all', this)">All Fixes</button>
+            <button class="tab-btn" onclick="filterCategory('hardware', this)">Hardware</button>
+            <button class="tab-btn" onclick="filterCategory('charging', this)">Charging</button>
+            <button class="tab-btn" onclick="filterCategory('battery', this)">Battery</button>
+            <button class="tab-btn" onclick="filterCategory('software', this)">Software & Unlocks</button>
+        </div>
+
+        <div id="manualList">
+
+            <!-- 1. Charging Port Replacement -->
+            <div class="manual-card" data-category="charging hardware" data-keywords="charging port type-c usb power battery">
+                <span class="badge">Charging • Intermediate</span>
+                <h3>Charging Port Replacement</h3>
+                <div class="tools-needed"><strong>Tools:</strong> Screwdriver, Heat Gun, Spudger</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Power down phone completely and remove SIM tray.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Apply gentle heat to back cover adhesive, use suction cup to open.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Disconnect battery flex cable immediately to prevent shorts.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Unscrew sub-board shield, lift out old board, and install replacement.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Part Cost (R): <input type="number" class="calc-input" value="120" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Labor Fee (R): <input type="number" class="calc-input" value="200" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">320</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=how+to+replace+smartphone+charging+port" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+            <!-- 2. Screen / Display Replacement -->
+            <div class="manual-card" data-category="hardware" data-keywords="screen display black touch glass replacement crack">
+                <span class="badge">Hardware • Advanced</span>
+                <h3>Screen / Display Replacement</h3>
+                <div class="tools-needed"><strong>Tools:</strong> Heat Mat, Opening Picks, Tweezers, Clamp</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Power off device and heat front edges evenly to loosen display adhesive.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Carefully slice through old adhesive using thin opening picks.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Disconnect broken screen flex and clean frame edges of old glue.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Test new screen functionality before final mounting and clamping.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Part Cost (R): <input type="number" class="calc-input" value="450" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Labor Fee (R): <input type="number" class="calc-input" value="300" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">750</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=smartphone+lcd+screen+replacement+tutorial" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+            <!-- 3. Battery Replacement -->
+            <div class="manual-card" data-category="battery hardware" data-keywords="battery draining swelling power percentage fast">
+                <span class="badge">Battery • Beginner</span>
+                <h3>Battery Replacement</h3>
+                <div class="tools-needed"><strong>Tools:</strong> Screwdriver, Pry Tool, Pull-tabs</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Open back cover and safely disconnect battery connector.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Slowly pull battery adhesive tabs horizontally at a low angle.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Drop in new battery with fresh adhesive backing and reconnect.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Part Cost (R): <input type="number" class="calc-input" value="180" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Labor Fee (R): <input type="number" class="calc-input" value="150" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">330</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=how+to+safely+replace+phone+battery" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+            <!-- 4. Water Damage Treatment -->
+            <div class="manual-card" data-category="hardware" data-keywords="water damage liquid wet corrosion cleaning">
+                <span class="badge">Diagnostics • Intermediate</span>
+                <h3>Water Damage Restoration</h3>
+                <div class="tools-needed"><strong>Tools:</strong> Ultrasonic Cleaner, Isopropyl Alcohol (IPA 99%), Soft Brush</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Immediately disconnect battery and power off. Do not plug into charger!</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Disassemble completely down to the bare motherboard.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Scrub corrosion spots gently using 99% IPA and an anti-static soft brush.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Run affected boards through an ultrasonic bath if necessary, then dry fully.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Part Cost (R): <input type="number" class="calc-input" value="30" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Labor Fee (R): <input type="number" class="calc-input" value="250" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">280</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=smartphone+water+damage+repair+cleaning" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+            <!-- 5. Speaker & Microphone Repair -->
+            <div class="manual-card" data-category="hardware" data-keywords="microphone earpiece speaker sound audio call mute">
+                <span class="badge">Hardware • Beginner</span>
+                <h3>Speaker & Microphone Repair</h3>
+                <div class="tools-needed"><strong>Tools:</strong> Precision Screwdriver, Tweezers, Fine Needle</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Inspect audio mesh grills externally for pocket lint clogging. Clean with fine needle.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Open back housing and disconnect module/flex connected to the buzzer or mic.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Test contacts for continuity and swap out faulty buzzer or microphone flex unit.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Part Cost (R): <input type="number" class="calc-input" value="80" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Labor Fee (R): <input type="number" class="calc-input" value="150" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">230</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=how+to+fix+smartphone+microphone+speaker+replacement" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+            <!-- 6. Camera Module Replacement -->
+            <div class="manual-card" data-category="hardware" data-keywords="camera blurry lens focus front back picture">
+                <span class="badge">Hardware • Intermediate</span>
+                <h3>Camera Module Replacement</h3>
+                <div class="tools-needed"><strong>Tools:</strong> Precision Screwdriver, Plastic Spudger, Dust Blower</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Open back cover and disconnect battery to secure the logic board.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Unscrew metal bracket securing the front or back camera flex connectors.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Lift out faulty camera module. Ensure glass lens inside is clean of dust using a blower.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Part Cost (R): <input type="number" class="calc-input" value="250" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Labor Fee (R): <input type="number" class="calc-input" value="200" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">450</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=smartphone+camera+module+replacement+guide" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+            <!-- 7. Software Bootloop & Firmware Flashing -->
+            <div class="manual-card" data-category="software" data-keywords="software bootloop frp hang logo flash firmware unlock">
+                <span class="badge software">Software • Intermediate</span>
+                <h3>Bootloop & Firmware Flashing</h3>
+                <div class="tools-needed"><strong>Tools:</strong> PC/Laptop, USB Cable, Flashing Tool Software (Odin/SP Flash)</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Boot phone into Download or Fastboot mode using correct hardware buttons.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Connect device to PC and launch official flashing utility matching chip type.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Load stock ROM package files and execute clean flash to clear corrupted blocks.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Software License (R): <input type="number" class="calc-input" value="0" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Service Fee (R): <input type="number" class="calc-input" value="200" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">200</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=how+to+flash+stock+firmware+fix+bootloop" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+            <!-- 8. Google Account (FRP) Bypass -->
+            <div class="manual-card" data-category="software" data-keywords="frp google account bypass gmail lock reset security">
+                <span class="badge software">Software • Advanced</span>
+                <h3>Google Account (FRP) Bypass</h3>
+                <div class="tools-needed"><strong>Tools:</strong> PC/Laptop, USB Cable, FRP Tool Utility / Combination Files</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Connect device to Wi-Fi network during initial setup layout screen.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Launch computer-based FRP unlocking software or utilize browser exploit link method.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Clear Google Play Services data cache or write modified security patch parameter.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Reboot device and verify clean setup wizard bypass success.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Tool Credit (R): <input type="number" class="calc-input" value="50" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Service Fee (R): <input type="number" class="calc-input" value="250" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">300</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=latest+frp+bypass+methods+android+smartphone" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+            <!-- 9. Network / Carrier Unlocking -->
+            <div class="manual-card" data-category="software" data-keywords="network unlock carrier sim locked code region">
+                <span class="badge software">Software • Intermediate</span>
+                <h3>Network & SIM Unlocking</h3>
+                <div class="tools-needed"><strong>Tools:</strong> PC, Unlocking Server Credit / Direct Client Utility</div>
+                
+                <div class="steps-container">
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Insert unsupported SIM card and check if network unlock PIN prompt appears.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Retrieve device IMEI number (*#06#) and submit via server code generation or utility port.</span></label>
+                    <label class="step-item"><input type="checkbox" onchange="toggleStep(this)"><span class="step-text">Input unlock code or execute direct patch to free device carrier restrictions.</span></label>
+                </div>
+
+                <div class="calc-box">
+                    <label>Unlock Code Cost (R): <input type="number" class="calc-input" value="100" oninput="calculateTotal(this)"></label>
+                    <label style="margin-top:5px;">Service Fee (R): <input type="number" class="calc-input" value="150" oninput="calculateTotal(this)"></label>
+                    <div style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
+                        <span>Customer Quote:</span>
+                        <span class="profit-display">R <span class="total-val">250</span></span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://www.youtube.com/results?search_query=how+to+network+unlock+android+phone" target="_blank" class="youtube-btn">▶ Watch Video Guide</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleStep(checkbox) {
+            if (checkbox.checked) {
+                checkbox.closest('.step-item').classList.add('completed');
+            } else {
+                checkbox.closest('.step-item').classList.remove('completed');
+            }
+        }
+
+        // Live Search Filter
+        function filterManuals() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.querySelectorAll('.manual-card');
+
+            cards.forEach(card => {
+                let keywords = card.getAttribute('data-keywords');
+                if (keywords.includes(input) || card.innerText.toLowerCase().includes(input)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // Category Tab Filter
+        function filterCategory(category, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            let cards = document.querySelectorAll('.manual-card');
+            cards.forEach(card => {
+                let cat = card.getAttribute('data-category');
+                if (category === 'all' || cat.includes(category)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // Dynamic Pricing Calculator
+        function calculateTotal(element) {
+            let card = element.closest('.manual-card');
+            let inputs = card.querySelectorAll('.calc-input');
+            let total = 0;
+            inputs.forEach(input => {
+                let val = parseFloat(input.value) || 0;
+                total += val;
+            });
+            card.querySelector('.total-val').innerText = total;
+        }
+    </script>
+
+</body>
+</html>
